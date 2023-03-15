@@ -1,5 +1,6 @@
 const form = document.getElementById("csv-upload-form");
 const fileInput = document.getElementById("csv-file-input");
+const downloadForm = document.getElementById("download-csv-form");
 const downloadBtn = document.getElementById("download-csv-btn");
 
 let csvData = null; // store the CSV data in a variable
@@ -22,8 +23,10 @@ form.addEventListener("submit", async (event) => {
         }
 
         csvData = await response.text(); // store the CSV data in the variable
+        downloadForm.style.display = "block"; // show the "Download CSV" form
+        downloadBtn.disabled = false; // enable the "Download CSV" button
     } catch (error) {
-        console.error(error);
+
     }
 });
 
