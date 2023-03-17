@@ -12,7 +12,7 @@ form.addEventListener("submit", async (event) => {
     formData.append("file", fileInput.files[0]); // add the selected file to the FormData object
 
     try {
-        const response = await fetch("http://localhost:8080/check/csv", {
+        const response = await fetch("https://sap-production.up.railway.app/check/csv", {
             method: "POST",
             body: formData,
         });
