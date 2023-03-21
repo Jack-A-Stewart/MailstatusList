@@ -4,6 +4,7 @@ const downloadForm = document.getElementById("download-csv-form");
 const downloadBtn = document.getElementById("download-csv-btn");
 
 let csvData = null; // store the CSV data in a variable
+// https://sap-production.up.railway.app/check/csv
 
 form.addEventListener("submit", async (event) => {
     event.preventDefault(); // prevent default form submission behavior
@@ -12,7 +13,7 @@ form.addEventListener("submit", async (event) => {
     formData.append("file", fileInput.files[0]); // add the selected file to the FormData object
 
     try {
-        const response = await fetch("https://sap-production.up.railway.app/check/csv", {
+        const response = await fetch("https://sap-production.up.railway.app/check/upload", {
             method: "POST",
             body: formData,
         });
@@ -42,6 +43,6 @@ downloadBtn.addEventListener("click", () => {
         a.remove();
         window.URL.revokeObjectURL(url);
     } else {
-        console.log("No CSV data available");
+        console.log("No File data available");
     }
 });
