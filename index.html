@@ -1,31 +1,52 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <meta charset="UTF-8">
-    <title>Upload CSV File</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.6.0/css/bootstrap.min.css">
-    <style>
-        #download-file-form {
-            display: none;
-        }
-    </style>
+    <meta charset="utf-8">
+    <title>File Upload</title>
 </head>
-<body class="d-flex justify-content-center align-items-center" style="min-height: 100vh;">
-<div class="container">
-    <h1 class="text-center mb-5">Upload File</h1>
+<body>
+<form id="upload-form">
+    <input type="file" id="file-input">
+    <button type="submit">Upload</button>
+</form>
 
-    <form id="file-upload-form" class="text-center">
-        <input type="file" id="file-input" name="file" class="mb-3">
-        <button type="submit" id="submit-btn" class="btn btn-primary">Upload CSV</button>
-    </form>
+<script>
+    const form = document.querySelector('#upload-form');
+    const fileInput = document.querySelector('#file-input');
 
-    <form id="download-file-form" class="text-center">
-        <button type="submit" id="download-file-btn" class="btn btn-primary" disabled>Download CSV</button>
-    </form>
-</div>
+    form.addEventListener('submit', async (event) => {
+        event.preventDefault();
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.6.0/js/bootstrap.min.js"></script>
-<script src="index.js"></script>
+        const file = fileInput.files[0];
+        const formData = new FormData();
+        formData.append('file', file);
+
+        try {
+            const response = await fetch('http://localhost:8080/check/upload', {
+                method: 'POST',
+                body: formData
+            });
+
+            if (!response.ok) {
+                throw new Error('Upload failed');
+            }
+
+            const contentType = response.headers.get('content-type');
+            const blob = await response.blob();
+            const url = URL.createObjectURL(blob);
+
+            if (confirm(`Upload successful. Do you want to download the ${contentType} file?`)) {
+                const fileName = `result.${contentType.split('/')[1]}`;
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = fileName;
+                a.click();
+            }
+        } catch (error) {
+            console.error(error);
+            alert('Upload failed');
+        }
+    });
+</script>
 </body>
 </html>
